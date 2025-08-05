@@ -14,7 +14,8 @@ tor.CARDINAL_DIRECTIONS_INVERSE = {["north"] = 1,["east"] = 2,["south"] = 3,["we
 
 ---use a tortise-deny.lua file to prevent tortise functions from mining certain blocks
 ---chests, spawners, other computers, etc: anything you think it shouldn't be mining
-tor.deny = require("tortise-deny")
+local ok,result = pcall(require,"tortise-deny")
+tor.deny = ok and result or {patterns = {},exceptions = {}}
 
 ---the cardinal direction the turtle is facing
 ---various functions will automatically update this
