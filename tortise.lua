@@ -12,10 +12,9 @@ local tor = {}
 tor.CARDINAL_DIRECTIONS = {"north","east","south","west"}
 tor.CARDINAL_DIRECTIONS_INVERSE = {["north"] = 1,["east"] = 2,["south"] = 3,["west"] = 4}
 
----use a tortise-deny.lua file to prevent tortise functions from mining certain blocks
+---use a tortise-deny.lua file in /libs to prevent tortise functions from mining certain blocks
 ---chests, spawners, other computers, etc: anything you think it shouldn't be mining
-local ok,result = pcall(require,"tortise-deny")
-tor.deny = ok and result or {patterns = {},exceptions = {}}
+tor.deny = require("lib/tortise-deny")
 
 ---the cardinal direction the turtle is facing
 ---various functions will automatically update this
@@ -170,12 +169,16 @@ end
 --- - dir is invalid
 --- - the turtle cannot move at any individual step
 ---@param dist integer number of blocks to move
----@param dir? turtleDirection|"back"|cardinalDirection the direction to move
+---@param dir? turtleDirection|"back"|"left"|"right"|cardinalDirection the direction to move
 ---@param callback? function a function to run before every step of the movement, which takes the step number as an argument
 function tor.move(dist,dir,callback)
   if dir == "north" or dir == "south" or dir == "east" or dir == "west" then
     ---@diagnostic disable-next-line we already checked that dir is valid here
     tor.orient(dir)
+    dir = "forward"
+  elseif dir == "left" or dir == "right" then
+    ---@diagnostic disable-next-line
+    tor.turn(dir)
     dir = "forward"
   elseif dir == nil then
     dir = "forward"
@@ -197,7 +200,7 @@ end
 --- - the turtle runs out of fuel
 --- - any attempted block mining fails
 ---@param dist integer number of blocks to mine
----@param dir? turtleDirection|"back"|cardinalDirection direction to mine
+---@param dir? turtleDirection|"back"|"left"|"right"|cardinalDirection direction to mine
 ---@param callback function? a function to run before every step of the movement, which takes the step number as an argument
 function tor.mine(dist,dir,callback)
   if dist < 0 then error("dist cannot be less than 0",2)
@@ -238,6 +241,10 @@ function tor.mine(dist,dir,callback)
   elseif dir == "back" then
     tor.turn()
     tor.turn()
+    dir = "forward"
+  elseif dir == "left" or dir == "right" then
+    ---@diagnostic disable-next-line
+    tor.turn(dir)
     dir = "forward"
   elseif dir == nil then
     dir = "forward"
