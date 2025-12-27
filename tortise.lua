@@ -194,7 +194,7 @@ function tor.move(dist,dir,callback)
 end
 
 ---direction agnostic movement function with distance and recursive block mining
----erros if
+---errors if
 --- - dist is less than 0
 --- - dir is invalid
 --- - the turtle runs out of fuel
