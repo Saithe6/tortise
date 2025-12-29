@@ -144,7 +144,7 @@ function tor.drop(dir,count)
   elseif dir == "forward" or nil then
     return turtle.drop(count)
   else
-    error(dir.." isn't a valid turtle direction")
+    error(dir.." isn't a valid turtle direction",2)
   end
 end
 
@@ -160,7 +160,7 @@ function tor.compare(dir)
   elseif dir == "forward" or dir == nil then
     return turtle.compareDown()
   else
-    error(dir.." isn't a valid turtle direction")
+    error(dir.." isn't a valid turtle direction",2)
   end
 end
 
